@@ -7,14 +7,16 @@
  *********************************************************************/
 
 #pragma once
+#include <string>
+#include <sstream>
 
 template <class T>
 class LinkedList {
 private:
 	class Node;
 
-	Node head;
-	Node tail;
+	Node* head;
+	Node* tail;
 
 	unsigned int size;
 
@@ -26,6 +28,7 @@ public:
 	void insertEnd(const T& data);
 	void remove(const T& data);
 	bool contains(const T& data);
+	std::string toString();
 	void sort();
 };
 
@@ -34,8 +37,14 @@ class LinkedList<T>::Node {
 public:
 	T data;
 	Node* next;
+	Node();
 	Node(T data);
 };
+
+template <class T>
+LinkedList<T>::Node::Node() {
+	this->next = nullptr;
+}
 
 template <class T>
 LinkedList<T>::Node::Node(T data) {
@@ -53,7 +62,7 @@ LinkedList<T>::LinkedList() {
 template <class T>
 LinkedList<T>::~LinkedList() {
 	// Store the node to delete
-	Node temp;
+	Node* temp;
 
 	// For each node in the list, delete
 	while (this->head != nullptr) {
@@ -71,10 +80,10 @@ LinkedList<T>::~LinkedList() {
 template <class T>
 void LinkedList<T>::insertStart(const T& data) {
 	// Create the node to insert
-	Node newNode = new Node(data);
+	Node* newNode = new Node(data);
 
 	// The new node will become the new head
-	newNode.next = this->head;
+	newNode->next = this->head;
 
 	// If the head is not set, the tail also needs to be set
 	if (this->head == nullptr) {
@@ -86,7 +95,7 @@ void LinkedList<T>::insertStart(const T& data) {
 template <class T>
 void LinkedList<T>::insertEnd(const T& data) {
 	// Create the node to insert
-	Node newNode = new Node(data);
+	Node* newNode = new Node(data);
 
 	// If the tail already exists, update it
 	if (this->tail != nullptr) {
@@ -98,4 +107,68 @@ void LinkedList<T>::insertEnd(const T& data) {
 	}
 	this->tail = newNode;
 
+}
+
+template <class T>
+void LinkedList<T>::remove(const T& data) {
+	Node* current = this->head;
+
+	// Check if current is the target
+	if (current->data == data) {
+		this->head = this->head->next;
+		delete current;
+		return;
+	}
+
+	// Traverse until the next node is the target value
+	while (current->next != nullptr) {
+		// Delete the next node if it contains the target value
+		if (current->next->data == data) {
+			Node* toDelete = current->next;
+			current->next = current->next->next;
+			delete toDelete;
+
+			// Check if current is now the tail
+			if (current->next == nullptr) {
+				this->tail = current;
+			}
+			return;
+		}
+
+		current = current->next;
+	}
+}
+
+template <class T>
+bool LinkedList<T>::contains(const T& data) {
+	Node current = this->head;
+
+	while (current != nullptr) {
+		if (current.data == data) {
+			return true;
+		}
+
+		// Travel to the next node
+		current = current.next;
+	}
+
+	return false;
+}
+
+template <class T>
+std::string LinkedList<T>::toString() {
+	std::stringstream output;
+
+	Node* current = this->head;
+
+	while (current != nullptr) {
+		output << current->data;
+		if (current->next != nullptr) {
+			output << " -> ";
+		}
+
+		current = current->next;
+	}
+
+	return output.str();
 }
