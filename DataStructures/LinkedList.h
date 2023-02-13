@@ -29,7 +29,6 @@ public:
 	void remove(const T& data);
 	bool contains(const T& data);
 	std::string toString();
-	void sort();
 };
 
 template <class T>

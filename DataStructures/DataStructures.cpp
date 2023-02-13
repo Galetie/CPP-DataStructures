@@ -1,19 +1,22 @@
 #include <iostream>
-#include "LinkedList.h"
+#include "Stack.h"
+#include <random>
 
 int main()
 {
-    LinkedList<int> list;
-    
-    list.insertEnd(500);
-    for (int i = 0; i < 10; i++) {
-        list.insertStart(i * 2);
-    }
-    list.insertEnd(800);
-    list.remove(18);
-    list.insertStart(99);
+    while (true) {
 
-    std::cout << list.toString();
+        Stack<int> q;
+
+        for (int i = 0; i < 10000; i++) {
+            q.push(rand() % 10);
+        }
+
+        while (!q.isEmpty()) {
+            q.pop();
+        }
+        std::cout << std::endl;
+    }
 
     return 0;
 }
